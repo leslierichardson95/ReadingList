@@ -9,17 +9,20 @@ namespace ReadingList.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IBookManager bookManager;
+        private static IBookManager bookManagerCached;
 
 
         public HomeController(IBookManager bookManager)
         {
-            this.bookManager = bookManager;
+            if (HomeController.bookManagerCached == null)
+            {
+                HomeController.bookManagerCached = bookManager;
+            }
         }
 
         public ActionResult Index()
         {
-            List<Book> shelvedBooks = bookManager.GetShelvedBooks();
+            List<Book> shelvedBooks = HomeController.bookManagerCached.GetShelvedBooks();
 
             ViewData["ShelvedBooks"] = shelvedBooks;
             ViewData["Title"] = "MyShelf";
@@ -29,7 +32,7 @@ namespace ReadingList.Controllers
 
         public ActionResult Book(long id)
         {
-            Book shelvedBook = bookManager.GetShelvedBook(id);
+            Book shelvedBook = HomeController.bookManagerCached.GetShelvedBook(id);
 
             ViewData["ShelvedBook"] = shelvedBook;
             ViewData["Title"] = "My Shelved Book";
@@ -39,7 +42,7 @@ namespace ReadingList.Controllers
 
         public ActionResult RateBooks()
         {
-            Book neutralBook = bookManager.GetNeutralBook();
+            Book neutralBook = HomeController.bookManagerCached.GetNeutralBook();
 
             ViewData["NeutralBook"] = neutralBook;
             ViewData["Title"] = "RateBooks";
@@ -51,26 +54,26 @@ namespace ReadingList.Controllers
         {
             if (isSaved)
             {
-                bookManager.AddShelvedBook(currentBookId);
+                HomeController.bookManagerCached.AddShelvedBook(currentBookId);
             }
             else
             {
-                bookManager.AddRejectedBook(currentBookId);
+                HomeController.bookManagerCached.AddRejectedBook(currentBookId);
             }
-            bookManager.RemoveNeutralBook(currentBookId);
+            HomeController.bookManagerCached.RemoveNeutralBook(currentBookId);
             return Redirect("/Home/RateBooks/");
         }
 
         public ActionResult RemoveBookFromShelf(long id)
         {
-            bookManager.RemoveShelvedBook(id);
+            HomeController.bookManagerCached.RemoveShelvedBook(id);
             return Redirect("/Home/Index");
         }
 
         // Remove all books from shelf and place all books back under neutral books
         public ActionResult ResetAllBooks()
         {
-            bookManager.ResetAllBooks();
+            HomeController.bookManagerCached.ResetAllBooks();
             return Redirect("/Home/RateBooks/");
         }
 
