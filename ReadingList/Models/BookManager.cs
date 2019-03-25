@@ -156,7 +156,7 @@ namespace ReadingList.Models
         {
             Book book = new Book();
             book.Id = id;
-            book.Author = "NO AUTHOR"
+            book.Author = "NO AUTHOR";
             book.Language = "English";
             book.Link = "";
             book.Pages = "0";
