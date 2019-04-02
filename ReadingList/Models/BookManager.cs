@@ -20,7 +20,7 @@ namespace ReadingList.Models
         // Use when book info isn't available
         private static string noImagePath = "App_Data/imageNotFound.png";
 
-        // DEMO: Snapshot debugger - Only use this
+        // DEMO: Snapshot debugger - Only use this for demo!
         private static string absolutePath = "C:/Users/lerich/Documents/ReadingList/ReadingList/App_Data/books.json";
 
         private Random random = new Random();
@@ -36,7 +36,7 @@ namespace ReadingList.Models
             List<Book> books;
             try
             {
-                using (StreamReader r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath)))
+                using (StreamReader r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, absolutePath)))
                 {
                     string json = r.ReadToEnd();
                     books = JsonConvert.DeserializeObject<List<Book>>(json);
